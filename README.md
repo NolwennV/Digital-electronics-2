@@ -15,4 +15,4 @@ Content in the first column | Content in the second column
 - John Adams
 - Thomas Jefferson
 
-Infos sur [github directememt] (https://help.github.com/en/articles/basic-writing-and-formatting-syntax#paragraphs-and-line-breaks)
+Infos sur ce [guide](https://help.github.com/en/articles/basic-writing-and-formatting-syntax#paragraphs-and-line-breaks).

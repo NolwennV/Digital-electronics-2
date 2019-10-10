@@ -15,6 +15,7 @@
 /* Includes ----------------------------------------------------------*/
 #include <avr/io.h>
 #include <util/delay.h>
+#include "gpio.h"
 
 /* Typedef -----------------------------------------------------------*/
 /* Define ------------------------------------------------------------*/
@@ -36,39 +37,26 @@ void blink();
 int main(void)
 {
     /* Set output pin */
-    DDRB |= _BV(LED_PIN);           /* DDRB = DDRB or (0000 0001) */
-    DDRB |= _BV(LED_PIN2);          /* DDRB = DDRB or (0010 0000) */
-    DDRD &= ~_BV(PUSH_BUTTON);      /* DDRD = DDRD or (0000 0010) */
-
+    GPIO_config_output(&DDRB, LED_PIN);
+    GPIO_config_output(&DDRB, LED_PIN2);
+    GPIO_config_input_pullup(&PORTD, PUSH_BUTTON); 
+       
     /* Turn LED off */
-    PORTB &= ~_BV(LED_PIN);         /* PORTB = PORTB and (0000 0001) */
-    PORTB &= ~_BV(LED_PIN2);        /* PORTB = PORTB and (0010 0000) */
-    PORTD |= _BV(PUSH_BUTTON);
+    GPIO_write(&PORTB, LED_PIN,0);         
+    GPIO_write(&PORTB, LED_PIN,0);
 
     /* Infinite loop */
     for (;;)
     {
-        //blink();
-        if(bit_is_clear(PIND,2)){
-          blink();
+        if(GPIO_read(&PIND, PUSH_BUTTON) == 0){
+          GPIO_toggle(&PORTB, LED_PIN);
+          _delay_ms(BLINK_DELAY);
+          GPIO_toggle(&PORTB, LED_PIN);
+          GPIO_toggle(&PORTB, LED_PIN2);
+          _delay_ms(BLINK_DELAY);
+          GPIO_toggle(&PORTB, LED_PIN2);
         }
-
     }
 
     return (0);
 }
-/* Functions ---------------------------------------------------------*/
-/**
-  * Brief:  Blink a LED with delay function.
-  * Input:  None
-  * Return: None
-  */
- void blink (){
-   /* Invert LED and delay */
-        PORTB ^= _BV(LED_PIN);      /* PORTB = PORTB xor (0010 0000) */
-        _delay_ms(BLINK_DELAY);
-        PORTB ^= _BV(LED_PIN);     /* Wait for several milisecs */
-        PORTB ^= _BV(LED_PIN2);      
-        _delay_ms(BLINK_DELAY);
-        PORTB ^= _BV(LED_PIN2);
- }

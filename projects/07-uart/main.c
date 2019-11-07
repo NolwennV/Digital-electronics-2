@@ -101,31 +101,37 @@ ISR(ADC_vect)
     if (value>=500 && value<=750){
         lcd_clrscr();
         lcd_puts("Select button");
+        uart_puts("\033[32m");  
         uart_puts(" Select button\r\n");
     }
     else if (value>= 300 && value <=500){
         lcd_clrscr();
         lcd_puts("Left button");
+        uart_puts("\033[33m");  
         uart_puts(" Left button\r\n");
     }
     else if (value >= 150 && value <= 300){
         lcd_clrscr();
         lcd_puts("Down button");
+        uart_puts("\033[34m");  
         uart_puts(" Down button\r\n");
     }
     else if (value >= 50 && value <= 150){
         lcd_clrscr();
         lcd_puts("Up button");
+        uart_puts("\033[35m");  
         uart_puts(" Up button\r\n");
     }
     else if (value <= 50){
         lcd_clrscr();
         lcd_puts("Right button");
+        uart_puts("\033[36m");  
         uart_puts(" Right button\r\n");
     }
     else {
         lcd_clrscr();
         lcd_puts("No button");
+        uart_puts("\033[0m");    
         uart_puts(" No button\r\n");
     }
 }

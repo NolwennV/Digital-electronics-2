@@ -62,10 +62,22 @@ int main(void)
     sei();
 
     // Put string to ringbuffer for transmitting via UART.
-    uart_puts("UART testing\r\n");
+    uart_puts("---Interactive UART console ---\r\nread current Timer/counter1 value\r\n2: reset Timer/counter1\r\n");
 
     // Infinite loop
     for (;;) {
+        uint8_t c;
+        c = uart_getc();
+        if (c != '\0'){
+            if (c == '1'){
+                char uart_string[5];
+                uint16_t value = 0;
+                value = TCNT1;
+                itoa(value, uart_string , 10);
+                uart_puts(uart_string);
+                uart_puts("\r\n");
+            }
+        }
     }
 
     // Will never reach this
@@ -87,7 +99,7 @@ ISR(TIMER1_OVF_vect)
  */
 ISR(ADC_vect)
 {
-   uint16_t value = 0;
+  /*  uint16_t value = 0;
    char uart_string[30];
 
 	// Read 10-bit ACD value
@@ -133,5 +145,5 @@ ISR(ADC_vect)
         lcd_puts("No button");
         uart_puts("\033[0m");    
         uart_puts(" No button\r\n");
-    }
+    } */
 }

@@ -43,7 +43,7 @@ void fsm_ADC(void);
 int main(void)
 {
     /*Set input pin for joystick key button*/
-     GPIO_config_input_pullup(&PORTC, PUSH_BUTTON);
+     GPIO_config_input_pullup(&PORTC, KEY_BUTTON);
     /* ADC
      * Configure ADC reference, clock source, enable ADC module, 
      *       and enable conversion complete interrupt */

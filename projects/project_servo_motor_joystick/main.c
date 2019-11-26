@@ -15,6 +15,7 @@
 #include <avr/interrupt.h>
 #include "timer.h"
 #include "uart.h"
+#include "gpio.h"
 
 /* Typedef -----------------------------------------------------------*/
 typedef enum {
@@ -22,11 +23,14 @@ typedef enum {
     X_CONVERSION,
     Y_CONVERSION,
 } state_t;
+
 /* Define ------------------------------------------------------------*/
 #define UART_BAUD_RATE 9600
+#define KEY_BUTTON PC2
 
 /* Variables ---------------------------------------------------------*/
 state_t current_state = IDLE;
+
 /* Function prototypes -----------------------------------------------*/
 void fsm_ADC(void);
 
@@ -38,7 +42,8 @@ void fsm_ADC(void);
  */
 int main(void)
 {
-
+    /*Set input pin for joystick key button*/
+     GPIO_config_input_pullup(&PORTC, PUSH_BUTTON);
     /* ADC
      * Configure ADC reference, clock source, enable ADC module, 
      *       and enable conversion complete interrupt */
@@ -51,11 +56,11 @@ int main(void)
      ADCSRA |= _BV(ADPS0) | _BV(ADPS1) | _BV(ADPS2);
      ADCSRA |= _BV(ADIE);
      ADCSRA |= _BV(ADEN);
-    /* Timer1
-     * TODO: Configure Timer1 clock source and enable overflow 
+    /* Timer0
+     * Configure Timer0 clock source and enable overflow 
      *       interrupt */
-    TIM_config_prescaler(TIM1, TIM_PRESC_64);
-    TIM_config_interrupt(TIM1, TIM_OVERFLOW_ENABLE);
+    TIM_config_prescaler(TIM0, TIM_PRESC_1024);
+    TIM_config_interrupt(TIM0, TIM_OVERFLOW_ENABLE);
     // UART: asynchronous, 8-bit data, no parity, 1-bit stop
     uart_init(UART_BAUD_SELECT(UART_BAUD_RATE, F_CPU));
 
@@ -75,10 +80,13 @@ int main(void)
 }
 
 /**
- *  Brief: Timer1 overflow interrupt routine. SUpdtae state of the FSM.
+ *  Brief: Timer1 overflow interrupt routine. Updtae state of the FSM.
  */
-ISR(TIMER1_OVF_vect)
+ISR(TIMER0_OVF_vect)
 {
+    if(GPIO_read(&PINC, KEY_BUTTON) == 0){
+	uart_puts("Key button pressed\r\n");
+    }
     fsm_ADC();
 }
 

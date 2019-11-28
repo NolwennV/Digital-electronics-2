@@ -49,7 +49,7 @@ int main(void)
 	/* Define TOP value to obtain f = 50Hz */
 	OCR1A = 625;
 	/* Define duty cycle */
-	OCR1B = 125; 	//2ms pulse, right
+	OCR1B = 15; 	//2ms pulse, right
 	
 
 

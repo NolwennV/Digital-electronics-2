@@ -64,6 +64,8 @@ int main(void)
 	/*Set non inverting mode for PWM */
 	TCCR1A &= ~_BV(COM1B0);
 	TCCR1A |= _BV(COM1B1);
+    TCCR1A &= ~_BV(COM1A0);
+	TCCR1A |= _BV(COM1A1);
 	/* Define TOP value to obtain f = 50Hz */
 	ICR1 = 625;
 	/* Define duty cycle */

@@ -16,7 +16,6 @@
 #include <util/delay.h>
 #include "timer.h"
 #include "gpio.h"
-
 #include "uart.h"
 
 /* Typedef -----------------------------------------------------------*/
@@ -36,6 +35,8 @@ typedef enum {
 /* Variables ---------------------------------------------------------*/
 state_t current_state = IDLE;
 int is_x = 1;
+int mode = 0;
+int debounce = 0;
 /* Function prototypes -----------------------------------------------*/
 void fsm_ADC(void);
 
@@ -87,14 +88,11 @@ int main(void)
      ADCSRA |= _BV(ADIE);
      ADCSRA |= _BV(ADEN);
  
-	
-	// UART: asynchronous, 8-bit data, no parity, 1-bit stop
+ // UART: asynchronous, 8-bit data, no parity, 1-bit stop
     uart_init(UART_BAUD_SELECT(UART_BAUD_RATE, F_CPU));
-
     // Enables interrupts by setting the global interrupt mask
     sei();
-	// Put string to ringbuffer for transmitting via UART.
-    //uart_puts("---Input from joystick---\r\n");
+
 
     // Infinite loop
     for (;;) {
@@ -119,20 +117,42 @@ ISR(TIMER1_OVF_vect)
  */
 ISR(ADC_vect)
 {
-   
-	char uart_string[30];
     uint16_t value = 0;
+    char uart_string[30];
    // Read 10-bit ACD value
    value = ADC;
-   if (is_x){
-    OCR1B = value /17 + 15;
-     //Update UART transmiter
-   uart_puts("\r\nValue =");
-   itoa(value, uart_string , 10);
-	uart_puts(uart_string); 
-   }
-   else{
-        OCR1A = value /17 + 15;
+   switch (mode){
+    case 0:
+        if (is_x){
+            OCR1B = value /17 + 15;
+        }
+        else{
+            OCR1A = value /17 + 15;
+        }
+        //Update UART transmiter
+    itoa(mode, uart_string , 10);
+    uart_puts(uart_string); 
+        break;
+    case 1:
+        if (is_x == 1){
+            OCR1B = value /17 + 15;
+            OCR1A = 45;
+        }
+        //Update UART transmiter
+    itoa(mode, uart_string , 10);
+    uart_puts(uart_string); 
+        break;
+    case 2:
+        if (is_x == 0){
+            OCR1A = value /17 + 15;
+            OCR1B = 45;
+        }
+        //Update UART transmiter
+    itoa(mode, uart_string , 10);
+    uart_puts(uart_string); 
+        break;
+    default:
+        break;
    }
   
   
@@ -143,6 +163,19 @@ void fsm_ADC(void)
 {
     switch (current_state) {
     case IDLE:
+        if(GPIO_read(&PINC, KEY_BUTTON) == 0){
+            debounce++;
+            if(debounce>2)
+            {
+                debounce = 0;
+            mode++;
+            if(mode > 3){
+                mode = 0;
+            }
+            }
+            
+
+        }
         current_state = X_CONVERSION;
         break;
 

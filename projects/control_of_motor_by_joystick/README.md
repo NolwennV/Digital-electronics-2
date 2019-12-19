@@ -11,7 +11,7 @@
 
 ## Introduction
 
-This project takes place under CMPT 2 (Digital Elctronics) lessons, held at Brno Univ. of Technology during the winter semester of 2019. The chosen task was to control several servomotors with joysticks. A video demonstration can be found [here](https://photos.google.com/share/AF1QipMdpGbvYN99597vpX2I2iQgWYrYtQ_Slmrb9rP06C0bkLe5C2c2SOC2XVQtNyGAcw?key=dDFmclJlN3dPSGxSQUx2NzhiX2pqblhRV3hVTk5B).
+This project takes place under CMPT 2 (Digital Elctronics) lessons, held at Brno Univ. of Technology during the winter semester of 2019. The chosen task was to control several servomotors with joysticks. A video demonstration can be found [here](https://photos.google.com/share/AF1QipMdpGbvYN99597vpX2I2iQgWYrYtQ_Slmrb9rP06C0bkLe5C2c2SOC2XVQtNyGAcw?key=dDFmclJlN3dPSGxSQUx2NzhiX2pqblhRV3hVTk5B). The PowerPoint presentation can be found [here](https://github.com/Nyrdann/Digital-electronics-2/blob/master/docs/Digital%20electronics%202%20project.pptx).
 
 ## Hardware
 
